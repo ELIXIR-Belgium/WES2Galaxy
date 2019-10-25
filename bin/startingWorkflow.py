@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 from bioblend.galaxy import GalaxyInstance
-import sys
 import time
 import os
 import json
@@ -10,8 +9,10 @@ GALAXY_URL = 'http://localhost:80'
 library_name = 'Local data'
 history_name = 'History'
 output_history_name = 'Output history'
-outputDir = '/mountDir/outputData'
-datamapping_file = '/mountDir/dataMapping.json'
+outputDir = '/output'
+datamapping_link = 'https://raw.githubusercontent.com/ELIXIR-Belgium/BioContainers_for_training/master/Galaxy_container/mountDir/dataMapping.json'
+workflow = 'https://raw.githubusercontent.com/ELIXIR-Belgium/BioContainers_for_training/master/Galaxy_container/workflow/Galaxy-Workflow-galaxy-intro-strands-2.ga'
+inputfile = 'https://raw.githubusercontent.com/ELIXIR-Belgium/BioContainers_for_training/master/Galaxy_container/mountDir/inputData/UCSC_input.bed'
 
 # - Create Galaxy Instance Object
 gi = GalaxyInstance(
@@ -23,12 +24,10 @@ histories = gi.histories.get_histories(name=history_name)
 history_id = histories[0]['id']
 print('History ID: ' + history_id)
 
-# - Create Libary
-# Default data is loaded from mounted directory
+# - Create Library
 gi.libraries.create_library(name=library_name)
 libraries = gi.libraries.get_libraries(name=library_name)
 library_id = libraries[0]['id']
-
 print('Library ID: ' + library_id)
 
 # - Upload mounted input data in library
@@ -36,9 +35,9 @@ gi.libraries.upload_file_from_server(library_id, './inputData')
 
 # - Load data in history
 files = gi.libraries.show_library(library_id, contents=True)
-for f in files:
-    if f['type'] == 'file':
-        gi.histories.upload_dataset_from_library(history_id, f['id'])
+# for f in files:
+#     if f['type'] == 'file':
+#         gi.histories.upload_dataset_from_library(history_id, f['id'])
 
 # - Check for installed workflow
 workflows = gi.workflows.get_workflows()
