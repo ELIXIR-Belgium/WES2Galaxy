@@ -48,9 +48,15 @@ for f in files:
     if f['type'] == 'file':
         gi.histories.upload_dataset_from_library(history_id, f['id'])
 
+# - Reading out input workflow
+workflow_response = urllib2.urlopen(workflow_url)
+workflow_data = json.load(workflow_response)  
+
 # - Check for installed workflow
 workflows = gi.workflows.get_workflows()
-workflow_id = workflows[0]['id']
+for workflow in workflows:
+    if workflow['name'] == workflow_data['name']:
+        workflow_id = workflow['id']
 print('Workflow ID: ' + workflow_id)
 
 # - Examine workflow
