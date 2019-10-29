@@ -1,1 +1,1 @@
-# WES2Galaxy
+# Galaxy workflow execution using WES
