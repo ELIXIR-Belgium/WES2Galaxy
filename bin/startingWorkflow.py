@@ -11,8 +11,8 @@ library_name = 'Local data'
 history_name = 'History'
 output_history_name = 'Output history'
 outputDir = '/output'
-workflow_params_url = 'https://raw.githubusercontent.com/ELIXIR-Belgium/BioContainers_for_training/master/Galaxy_container/mountDir/dataMapping.json'
-workflow_url = 'https://raw.githubusercontent.com/ELIXIR-Belgium/BioContainers_for_training/master/Galaxy_container/workflow/Galaxy-Workflow-galaxy-intro-strands-2.ga'
+workflow_params_url = 'https://raw.githubusercontent.com/bedroesb/WES2Galaxy/master/example_data/dataMapping.json'
+workflow_url = 'https://raw.githubusercontent.com/bedroesb/WES2Galaxy/master/example_data/Galaxy-Workflow-galaxy-intro-strands-2.ga'
 
 # - Create Galaxy Instance Object
 gi = GalaxyInstance(

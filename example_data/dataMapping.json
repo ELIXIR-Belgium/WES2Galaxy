@@ -2,7 +2,7 @@
     "inputs": [
         {
             "step": "0",
-            "filename": "https://raw.githubusercontent.com/ELIXIR-Belgium/BioContainers_for_training/master/Galaxy_container/mountDir/inputData/UCSC_input.bed"
+            "filename": "https://raw.githubusercontent.com/bedroesb/WES2Galaxy/master/example_data/UCSC_input.bed"
         }
     ]
 }
