@@ -17,5 +17,6 @@ ADD bin/docker-install-workflow.sh /setup-workflow.sh
 ADD bin/starter-service.sh /starter-service.sh
 ADD /workflow /workflowDir
 
+RUN mkdir /output
 RUN chmod +x /setup-workflow.sh
 RUN /setup-workflow.sh

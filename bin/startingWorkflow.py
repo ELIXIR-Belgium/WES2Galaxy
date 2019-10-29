@@ -3,6 +3,7 @@ from bioblend.galaxy import GalaxyInstance
 import time
 import os
 import json
+import urllib2
 
 # - Parameters
 GALAXY_URL = 'http://localhost:80'
@@ -10,9 +11,9 @@ library_name = 'Local data'
 history_name = 'History'
 output_history_name = 'Output history'
 outputDir = '/output'
-datamapping_link = 'https://raw.githubusercontent.com/ELIXIR-Belgium/BioContainers_for_training/master/Galaxy_container/mountDir/dataMapping.json'
-workflow = 'https://raw.githubusercontent.com/ELIXIR-Belgium/BioContainers_for_training/master/Galaxy_container/workflow/Galaxy-Workflow-galaxy-intro-strands-2.ga'
-inputfile = 'https://raw.githubusercontent.com/ELIXIR-Belgium/BioContainers_for_training/master/Galaxy_container/mountDir/inputData/UCSC_input.bed'
+datamapping_url = 'https://raw.githubusercontent.com/ELIXIR-Belgium/BioContainers_for_training/master/Galaxy_container/mountDir/dataMapping.json'
+workflow_url = 'https://raw.githubusercontent.com/ELIXIR-Belgium/BioContainers_for_training/master/Galaxy_container/workflow/Galaxy-Workflow-galaxy-intro-strands-2.ga'
+inputfile_url = 'https://raw.githubusercontent.com/ELIXIR-Belgium/BioContainers_for_training/master/Galaxy_container/mountDir/inputData/UCSC_input.bed'
 
 # - Create Galaxy Instance Object
 gi = GalaxyInstance(
@@ -30,30 +31,34 @@ libraries = gi.libraries.get_libraries(name=library_name)
 library_id = libraries[0]['id']
 print('Library ID: ' + library_id)
 
+# - Create folder
+gi.libraries.create_folder(library_id, 'test', description=None)
+folder = gi.libraries.show_library(library_id, contents=True)[0]
+
 # - Upload mounted input data in library
-gi.libraries.upload_file_from_server(library_id, './inputData')
+gi.libraries.upload_file_from_url(library_id, inputfile_url, folder_id=folder['id'])
 
 # - Load data in history
 files = gi.libraries.show_library(library_id, contents=True)
-# for f in files:
-#     if f['type'] == 'file':
-#         gi.histories.upload_dataset_from_library(history_id, f['id'])
+for f in files:
+    if f['type'] == 'file':
+        gi.histories.upload_dataset_from_library(history_id, f['id'])
 
 # - Check for installed workflow
 workflows = gi.workflows.get_workflows()
 workflow_id = workflows[0]['id']
-print('Workflow ID: ' + library_id)
+print('Workflow ID: ' + workflow_id)
 
 # - Examine workflow
 wf = gi.workflows.show_workflow(workflow_id)
 print('Inputs workflow:' + str(wf['inputs']))
 
-
 # - Determining input data
-with open(datamapping_file, 'r') as f:
-    dataset_namings = json.load(f)
+datamapping_response = urllib2.urlopen(datamapping_url)
+datamapping_data = json.load(datamapping_response)  
+datamapping_data = {'inputs':[{'step':'0', 'filename':'https://raw.githubusercontent.com/ELIXIR-Belgium/BioContainers_for_training/master/Galaxy_container/mountDir/inputData/UCSC_input.bed'}]}
 datamap = dict()
-for inputname in dataset_namings['inputs']:
+for inputname in datamapping_data['inputs']:
     dataset = gi.histories.show_matching_datasets(
         history_id, name_filter=inputname['filename'])
     print('Input data step {}: '.format(
@@ -85,3 +90,8 @@ for of in output_files:
         print('Exporting ' + of['name'])
         gi.datasets.download_dataset(
             of['id'], file_path=outputDir)
+
+# - Delete datalibrary
+
+
+# - Reset history
