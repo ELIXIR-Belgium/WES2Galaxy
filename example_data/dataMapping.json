@@ -1,0 +1,8 @@
+{
+    "inputs": [
+        {
+            "step": "0",
+            "filename": "https://raw.githubusercontent.com/ELIXIR-Belgium/BioContainers_for_training/master/Galaxy_container/mountDir/inputData/UCSC_input.bed"
+        }
+    ]
+}
