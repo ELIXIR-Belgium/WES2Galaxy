@@ -15,8 +15,12 @@ ENV GALAXY_CONFIG_BRAND "Galaxy Container"
 ADD bin/startingWorkflow.py /startingWorkflow.py
 ADD bin/docker-install-workflow.sh /setup-workflow.sh
 ADD bin/starter-service.sh /starter-service.sh
+ADD /requirements.txt /requirements.txt 
 ADD /workflow /workflowDir
 
-RUN mkdir /output
-RUN chmod +x /setup-workflow.sh
+RUN mkdir /output \
+  && chmod +x /setup-workflow.sh \
+  && chmod +x /starter-service.sh
 RUN /setup-workflow.sh
+
+ENTRYPOINT [ "/starter-service.sh" ]
