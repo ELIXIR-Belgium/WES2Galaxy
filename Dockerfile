@@ -22,4 +22,4 @@ RUN mkdir /output \
   && chmod +x /bin/starter-service.sh
 RUN /bin/docker-install-workflow.sh
 
-ENTRYPOINT [ "/bin/starter-service.sh" ]
+#ENTRYPOINT [ "/bin/starter-service.sh" ]

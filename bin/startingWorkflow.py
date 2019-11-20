@@ -15,17 +15,17 @@ outputDir = '/output'
 # - Incoming from WES API
 
 WES_API = {
-    'workflow_params': {
+    "workflow_params": {
         "inputs": [
             {
                 "step": "0",
-                "filename": "https://raw.githubusercontent.com/bedroesb/WES2Galaxy/master/example_data/UCSC_input.bed"
+                "file": "https://raw.githubusercontent.com/bedroesb/WES2Galaxy/master/example_data/UCSC_input.bed"
             }
         ]
     },
-    'workflow_url': 'https://raw.githubusercontent.com/bedroesb/WES2Galaxy/Dev/example_data/Galaxy-Workflow-galaxy-intro-strands-2.ga',
-    'workflow_version': '0.1',
-    'workflow_type': 'ga'
+    "workflow_url": "https://raw.githubusercontent.com/bedroesb/WES2Galaxy/Dev/example_data/Galaxy-Workflow-galaxy-intro-strands-2.ga",
+    "workflow_version": "0.1",
+    "workflow_type": "ga"
 }
 
 
@@ -53,8 +53,8 @@ print('Folder created with ID : ' + folder['id'])
 
 # - Upload data in library based on URL
 for inputfile in WES_API['workflow_params']['inputs']:
-    gi.libraries.upload_file_from_url(library_id, inputfile['filename'], folder_id=folder['id'])
-    print(inputfile['filename'] + ' uploaded to the datalibrary')
+    gi.libraries.upload_file_from_url(library_id, inputfile['file'], folder_id=folder['id'])
+    print(inputfile['file'] + ' uploaded to the datalibrary')
 
 # - Load data in history
 files = gi.libraries.show_library(library_id, contents=True)
@@ -83,7 +83,7 @@ print('Inputs workflow:' + str(wf['inputs']))
 datamap = dict()
 for inputname in WES_API['workflow_params']['inputs']:
     dataset = gi.histories.show_matching_datasets(
-        history_id, name_filter=inputname['filename'])
+        history_id, name_filter=inputname['file'])
     print('Input data step {}: '.format(
         inputname['step']) + dataset[0]['name'])
     datamap[inputname['step']] = {'src': 'hda', 'id': dataset[0]['id']}
