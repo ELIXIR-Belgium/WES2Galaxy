@@ -13,8 +13,8 @@ output_history_name = 'Output history'
 outputDir = '/output'
 
 # - Incoming from WES API
-workflow_params_url = 'https://raw.githubusercontent.com/bedroesb/WES2Galaxy/master/example_data/dataMapping.json'
-workflow_url = 'https://raw.githubusercontent.com/bedroesb/WES2Galaxy/master/example_data/Galaxy-Workflow-galaxy-intro-strands-2.ga'
+workflow_params_url = 'https://raw.githubusercontent.com/bedroesb/WES2Galaxy/Dev/example_data/dataMapping.json'
+workflow_url = 'https://raw.githubusercontent.com/bedroesb/WES2Galaxy/Dev/example_data/amplicon.ga'
 workflow_version = '0.1'
 
 
