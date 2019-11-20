@@ -13,9 +13,20 @@ output_history_name = 'Output history'
 outputDir = '/output'
 
 # - Incoming from WES API
-workflow_params_url = 'https://raw.githubusercontent.com/bedroesb/WES2Galaxy/Dev/example_data/dataMapping.json'
-workflow_url = 'https://raw.githubusercontent.com/bedroesb/WES2Galaxy/Dev/example_data/amplicon.ga'
-workflow_version = '0.1'
+
+WES_API = {
+    'workflow_params': {
+        "inputs": [
+            {
+                "step": "0",
+                "filename": "https://raw.githubusercontent.com/bedroesb/WES2Galaxy/master/example_data/UCSC_input.bed"
+            }
+        ]
+    },
+    'workflow_url': 'https://raw.githubusercontent.com/bedroesb/WES2Galaxy/Dev/example_data/Galaxy-Workflow-galaxy-intro-strands-2.ga',
+    'workflow_version': '0.1',
+    'workflow_type': 'ga'
+}
 
 
 # - Create Galaxy Instance Object
@@ -40,12 +51,8 @@ gi.libraries.create_folder(library_id, 'URLdata', description=None)
 folder = gi.libraries.show_library(library_id, contents=True)[0]
 print('Folder created with ID : ' + folder['id'])
 
-# - Reading out workflow params
-datamapping_response = urllib2.urlopen(workflow_params_url)
-datamapping_data = json.load(datamapping_response)  
-
 # - Upload data in library based on URL
-for inputfile in datamapping_data['inputs']:
+for inputfile in WES_API['workflow_params']['inputs']:
     gi.libraries.upload_file_from_url(library_id, inputfile['filename'], folder_id=folder['id'])
     print(inputfile['filename'] + ' uploaded to the datalibrary')
 
@@ -56,13 +63,13 @@ for f in files:
         gi.histories.upload_dataset_from_library(history_id, f['id'])
 
 # - Reading out input workflow
-workflow_response = urllib2.urlopen(workflow_url)
+workflow_response = urllib2.urlopen(WES_API['workflow_url'])
 workflow_data = json.load(workflow_response)  
 
 # - Check for installed workflow
 workflows = gi.workflows.get_workflows()
 for workflow in workflows:
-    if workflow['name'] == workflow_data['name'] and workflow_data['format-version'] == workflow_version:
+    if workflow['name'] == workflow_data['name'] and workflow_data['format-version'] == WES_API['workflow_version']:
         workflow_id = workflow['id']
         print('Workflow is available with ID: ' + workflow_id)
     else:
@@ -74,7 +81,7 @@ print('Inputs workflow:' + str(wf['inputs']))
 
 # - Determining input data
 datamap = dict()
-for inputname in datamapping_data['inputs']:
+for inputname in WES_API['workflow_params']['inputs']:
     dataset = gi.histories.show_matching_datasets(
         history_id, name_filter=inputname['filename'])
     print('Input data step {}: '.format(
@@ -102,7 +109,7 @@ print('Workflow Done.')
 output_files = gi.histories.show_history(
     output_history_id, contents=True,  visible=True)
 for of in output_files:
-    if of['history_content_type'] == 'dataset':
+    if of['history_content_type'] == 'dataset' and of['state'] == 'ok':
         print('Exporting ' + of['name'])
         gi.datasets.download_dataset(
             of['id'], file_path=outputDir)
