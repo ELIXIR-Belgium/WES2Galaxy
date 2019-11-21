@@ -18,8 +18,7 @@ COPY /workflow /workflowDir
 
 RUN pip install ephemeris -U
 RUN mkdir /output \
-  && chmod +x /bin/docker-install-workflow.sh \
-  && chmod +x /bin/starter-service.sh
+  && chmod +x -R /bin
 RUN /bin/docker-install-workflow.sh
 
-#ENTRYPOINT [ "/bin/starter-service.sh" ]
+ENTRYPOINT [ "/bin/starter-service.sh" ]
