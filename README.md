@@ -2,9 +2,7 @@
 
 ![](https://raw.githubusercontent.com/elixir-europe/elixir-cloud-outline/master/images/schematic_overview.png)
 
-This is a proof of concept to show the possibility to invoke a workflow using the WES API.
-
-
+This is a proof of concept to invoke a galaxy workflow in galaxy using the WES API.
 
 ## Building a Galaxy image supporting the workflow
 
@@ -15,9 +13,11 @@ A Galaxy 19.01 container is decorated with the necessary tools to run the workfl
 docker build -t containername -f Dockerfile .
 ```
 
+Only workflows that are pre installed (at this moment the ones that are located in the `/workflow` folder) will be supported. In the future, supported workflows will all have their own image. Supported workflows will be based on an upcoming workflow registry.
+
 ## Workflow Execution Service (WES) API
 
-To mimic the WES `/runs` POST call, following example json is used:
+To mimic the WES `/runs` POST call, following example json is used as input:
 
 ```json
 {
@@ -35,21 +35,20 @@ To mimic the WES `/runs` POST call, following example json is used:
 }
 
 ```
-In the future, this WES endpoint will create a new workflow run and returns a RunId to monitor its progress.
+In the future, this WES call will create a new workflow run and will return a RunId to monitor its progress.
 
-The workflow_url is an absolute URL to a workflow file.
+- The *workflow_url* is an absolute URL to a workflow file.
 
-The workflow_params JSON object specifies input parameters, such as input files. The exact format of the JSON object depends on the conventions of the workflow language being used. Input files should either be absolute URLs.
+- The *workflow_params* JSON object specifies input parameters, such as input files. The exact format of the JSON object depends on the conventions of the workflow language being used. Input files should either be absolute URLs.
 
-The workflow_type is the type of workflow language.
+- The *workflow_type* is the type of workflow language.
 
-The workflow_type_version is the version of the workflow language submitted and must be one supported by this WES instance.
+- The *workflow_type_version* is the version of the workflow language submitted and must be one supported by this WES instance.
 
-See the RunRequest documentation for details about other fields.
-The attribute `inputs` contains a list of all the input files with their corresponding `file` and workflow `step`. Note that the step number is in string format.
+The attribute *inputs* contains a list of all the input files with their corresponding *file* and workflow *step*. Note that the step number is in string format.
 
 ## Building the docker image
-A Galaxy `19.01` container will be decorated with the necessary tools to run the workflow. 
+A Galaxy 19.01 container will be decorated with the necessary tools to run the workflow. 
 
 To build the docker image use following command in the root directory:
 
@@ -67,17 +66,20 @@ docker run -t containername
 
 ## TO DO
 
-* Using a WES flask client to invoke the workflow in the galaxy container
-* Implementing the possibility to check the workflow status
-* kill te container after specific amount of time (when user has data)
-* Give ID back to the user for retrieving status information
+- Using a WES flask client to invoke the workflow in the galaxy container
+- Implementing the possibility to check the workflow status
+- Kill te container after specific amount of time (when user has data)
+- Give ID back to the user for retrieving status information
 
 ## Problems
 
-* How to supply the output-data in the container back to the user?\
+- How to supply the output-data in the container back to the user?\
     -> Available on a server for a limited amount of time. \
     -> Downloadable through links
-* When the `startingWorkflow.py` script is manually started in the container, BioBlend is not installed. No problem when the script is started automatically with `ENTRYPOINT [ "/bin/starter-service.sh" ]` in the Dockerfile ?
+- When the `startingWorkflow.py` script is manually started in the container, BioBlend is not installed. No problem when the script is started automatically with\
+`ENTRYPOINT [ "/bin/starter-service.sh" ]`\
+in the Dockerfile ?
+- Not working with latest galaxy docker 19.05
 
 
 ## Documentation
