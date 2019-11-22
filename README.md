@@ -1,12 +1,12 @@
-# Galaxy workflow execution using proWES schemas
+# Galaxy workflow execution using proWES schema
 
 ![](https://raw.githubusercontent.com/elixir-europe/elixir-cloud-outline/master/images/schematic_overview.png)
 
-This is a proof of concept to invoke a galaxy workflow in galaxy using the WES API.
+This is a proof of concept to invoke a galaxy workflow in a galaxy container using the WES API. This will act as the proWES part (middleware) in the picture.
 
 ## Building a Galaxy image supporting the workflow
 
-A Galaxy 19.01 container is decorated with the necessary tools to run the workflow. 
+A Galaxy 19.01 container is decorated with the necessary tools to run the workflow. This galaxy container contains both the workflow and task execution service.
 
 
 ```sh
@@ -70,6 +70,7 @@ docker run -t containername
 - Implementing the possibility to check the workflow status
 - Kill te container after specific amount of time (when user has data)
 - Give ID back to the user for retrieving status information
+- Separating the workflow execution service in galaxy from the task execution service. (This is already possible)
 
 ## Problems
 
