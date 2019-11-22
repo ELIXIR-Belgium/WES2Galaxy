@@ -2,7 +2,23 @@
     "inputs": [
         {
             "step": "0",
-            "filename": "https://raw.githubusercontent.com/bedroesb/WES2Galaxy/master/example_data/UCSC_input.bed"
+            "filename": "https://zenodo.org/record/815875/files/silva.v4.fasta"
+        },
+	{
+            "step": "1",
+            "filename": "https://zenodo.org/record/815875/files/SRR651839_anguil.fasta"
+        },
+	{
+            "step": "2",
+            "filename": "https://zenodo.org/record/815875/files/SRR531818_pampa.fasta"
+        },
+	{
+            "step": "3",
+            "filename": "https://zenodo.org/record/815875/files/trainset16_022016.pds.fasta"
+        },
+	{
+            "step": "4",
+            "filename": "https://zenodo.org/record/815875/files/trainset16_022016.pds.tax"
         }
     ]
 }

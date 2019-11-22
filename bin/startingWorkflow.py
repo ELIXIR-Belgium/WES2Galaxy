@@ -11,36 +11,50 @@ library_name = 'Local data'
 history_name = 'History'
 output_history_name = 'Output history'
 outputDir = '/output'
-workflow_params_url = 'https://raw.githubusercontent.com/bedroesb/WES2Galaxy/master/example_data/dataMapping.json'
-workflow_url = 'https://raw.githubusercontent.com/bedroesb/WES2Galaxy/master/example_data/Galaxy-Workflow-galaxy-intro-strands-2.ga'
+
+# - Incoming from WES API
+
+WES_API = {
+    "workflow_params": {
+        "inputs": [
+            {
+                "step": "0",
+                "file": "https://raw.githubusercontent.com/bedroesb/WES2Galaxy/master/example_data/UCSC_input.bed"
+            }
+        ]
+    },
+    "workflow_url": "https://raw.githubusercontent.com/bedroesb/WES2Galaxy/Dev/example_data/Galaxy-Workflow-galaxy-intro-strands-2.ga",
+    "workflow_version": "0.1",
+    "workflow_type": "ga"
+}
+
 
 # - Create Galaxy Instance Object
 gi = GalaxyInstance(
     GALAXY_URL, email='admin@galaxy.org', password='admin')
+print('Connected to galaxy')
 
 # - Create history
 gi.histories.create_history(name=history_name)
 histories = gi.histories.get_histories(name=history_name)
 history_id = histories[0]['id']
-print('History ID: ' + history_id)
+print('History created with ID: ' + history_id)
 
 # - Create Library
 gi.libraries.create_library(name=library_name)
 libraries = gi.libraries.get_libraries(name=library_name)
 library_id = libraries[0]['id']
-print('Library ID: ' + library_id)
+print('Library created with ID : ' + library_id)
 
 # - Create folder
 gi.libraries.create_folder(library_id, 'URLdata', description=None)
 folder = gi.libraries.show_library(library_id, contents=True)[0]
-
-# - Reading out workflow params
-datamapping_response = urllib2.urlopen(workflow_params_url)
-datamapping_data = json.load(datamapping_response)  
+print('Folder created with ID : ' + folder['id'])
 
 # - Upload data in library based on URL
-for inputfile in datamapping_data['inputs']:
-    gi.libraries.upload_file_from_url(library_id, inputfile['filename'], folder_id=folder['id'])
+for inputfile in WES_API['workflow_params']['inputs']:
+    gi.libraries.upload_file_from_url(library_id, inputfile['file'], folder_id=folder['id'])
+    print(inputfile['file'] + ' uploaded to the datalibrary')
 
 # - Load data in history
 files = gi.libraries.show_library(library_id, contents=True)
@@ -48,10 +62,18 @@ for f in files:
     if f['type'] == 'file':
         gi.histories.upload_dataset_from_library(history_id, f['id'])
 
+# - Reading out input workflow
+workflow_response = urllib2.urlopen(WES_API['workflow_url'])
+workflow_data = json.load(workflow_response)  
+
 # - Check for installed workflow
 workflows = gi.workflows.get_workflows()
-workflow_id = workflows[0]['id']
-print('Workflow ID: ' + workflow_id)
+for workflow in workflows:
+    if workflow['name'] == workflow_data['name'] and workflow_data['format-version'] == WES_API['workflow_version']:
+        workflow_id = workflow['id']
+        print('Workflow is available with ID: ' + workflow_id)
+    else:
+        print('This workflow is not available.')
 
 # - Examine workflow
 wf = gi.workflows.show_workflow(workflow_id)
@@ -59,9 +81,9 @@ print('Inputs workflow:' + str(wf['inputs']))
 
 # - Determining input data
 datamap = dict()
-for inputname in datamapping_data['inputs']:
+for inputname in WES_API['workflow_params']['inputs']:
     dataset = gi.histories.show_matching_datasets(
-        history_id, name_filter=inputname['filename'])
+        history_id, name_filter=inputname['file'])
     print('Input data step {}: '.format(
         inputname['step']) + dataset[0]['name'])
     datamap[inputname['step']] = {'src': 'hda', 'id': dataset[0]['id']}
@@ -87,7 +109,7 @@ print('Workflow Done.')
 output_files = gi.histories.show_history(
     output_history_id, contents=True,  visible=True)
 for of in output_files:
-    if of['history_content_type'] == 'dataset':
+    if of['history_content_type'] == 'dataset' and of['state'] == 'ok':
         print('Exporting ' + of['name'])
         gi.datasets.download_dataset(
             of['id'], file_path=outputDir)

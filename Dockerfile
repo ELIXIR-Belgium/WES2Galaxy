@@ -12,11 +12,13 @@ LABEL maintainer.organisation='ELIXIR Belgium'
 
 ENV GALAXY_CONFIG_BRAND "Galaxy Container"
 
-ADD bin/startingWorkflow.py /startingWorkflow.py
-ADD bin/docker-install-workflow.sh /setup-workflow.sh
-ADD bin/starter-service.sh /starter-service.sh
-ADD /workflow /workflowDir
+COPY /bin /bin
+COPY /requirements.txt /requirements.txt 
+COPY /workflow /workflowDir
 
-RUN mkdir /output
-RUN chmod +x /setup-workflow.sh
-RUN /setup-workflow.sh
+RUN pip install ephemeris -U
+RUN mkdir /output \
+  && chmod +x -R /bin
+RUN /bin/docker-install-workflow.sh
+
+ENTRYPOINT [ "/bin/starter-service.sh" ]
