@@ -18,11 +18,11 @@ WES_API = {
         "inputs": [
             {
                 "step": "0",
-                "file": "https://raw.githubusercontent.com/bedroesb/WES2Galaxy/master/example_data/UCSC_input.bed"
+                "file": "https://raw.githubusercontent.com/ELIXIR-Belgium/WES2Galaxy/update/example_data/UCSC_input.bed"
             }
         ]
     },
-    "workflow_url": "https://raw.githubusercontent.com/bedroesb/WES2Galaxy/Dev/example_data/Galaxy-Workflow-galaxy-intro-strands-2.ga",
+    "workflow_url": "https://raw.githubusercontent.com/ELIXIR-Belgium/WES2Galaxy/update/example_data/Galaxy-Workflow-galaxy-intro-strands-2.ga",
     "workflow_version": "0.1",
     "workflow_type": "ga"
 }
