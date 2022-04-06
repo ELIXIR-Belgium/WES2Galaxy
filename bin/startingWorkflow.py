@@ -1,9 +1,8 @@
 #!/usr/bin/env python
-from bioblend.galaxy import GalaxyInstance
+from bioblend import galaxy
 import time
-import os
 import json
-import urllib2
+from urllib.request import urlopen
 
 # - Parameters
 GALAXY_URL = 'http://localhost:80'
@@ -30,8 +29,7 @@ WES_API = {
 
 
 # - Create Galaxy Instance Object
-gi = GalaxyInstance(
-    GALAXY_URL, email='admin@galaxy.org', password='admin')
+gi = galaxy.GalaxyInstance(url=GALAXY_URL, key='fakekey')
 print('Connected to galaxy')
 
 # - Create history
@@ -63,7 +61,7 @@ for f in files:
         gi.histories.upload_dataset_from_library(history_id, f['id'])
 
 # - Reading out input workflow
-workflow_response = urllib2.urlopen(WES_API['workflow_url'])
+workflow_response = urlopen(WES_API['workflow_url'])
 workflow_data = json.load(workflow_response)  
 
 # - Check for installed workflow
